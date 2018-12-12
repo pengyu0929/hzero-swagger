@@ -1,22 +1,27 @@
 server:
-  port: 18080
-spring:
-  application:
-    name: hzero-swagger
-  cloud:
-    config:
-      failFast: true
-      retry:
-        maxAttempts: 6
-        multiplier: 1.5
-        maxInterval: 2000
-      uri: localhost:8010
-      enabled: false
+  port: 8963
 management:
-  port: 18081
+  port: 8964
   security:
     enabled: false
 security:
   basic:
     enabled: false
+  ignored: /swagger-ui.html,/swagger-resources/**, /webjars/** , /docs/**
 
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+eureka:
+  instance:
+    preferIpAddress: ${EUREKA_INSTANCE_PREFER_IP_ADDRESS:true}
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30
+    metadata-map:
+      VERSION: 0.5.0
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_DEFAULT_ZONE:http://dev.hzero.org:8000/eureka}
+    registryFetchIntervalSeconds: 10
+    disable-delta: true

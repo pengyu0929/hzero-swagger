@@ -1,80 +1,69 @@
-# application.yml
 spring:
-  sleuth:
-    integration:
-      enabled: false
-    scheduled:
-      enabled: false
-    sampler:
-      percentage: 1.0
-    stream:
-      enabled: true
+  application:
+    name: hzero-swagger
   datasource:
-    url: jdbc:mysql://localhost:3306/demo_service?useUnicode=true&characterEncoding=utf-8&useSSL=false
-    username: choerodon
-    password: 123456
-  kafka: #使用原生spring kafka需要配置
-    bootstrap-servers: localhost:9092
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://db.hzero.org:3306/hzero_governance?useUnicode=true&characterEncoding=utf-8&useSSL=false}
+    username: ${SPRING_DATASOURCE_USERNAME:hzero}
+    password: ${SPRING_DATASOURCE_PASSWORD:hzero}
+  kafka:
+    bootstrap-servers: ${CHOERODON_EVENT_CONSUMER_KAFKA_BOOTSTRAP_SERVERS:kafka-0:9092}
+    producer:
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
     consumer:
-      group-id: iam-service
-      auto-offset-reset: earliest
+      group-id: hzero-swagger
+      auto-offset-reset: latest
+    listener:
+      ack-mode: manual_immediate
+      poll-timeout: 3000
   cloud:
-    bus:
-      enabled: true
     stream:
+      default-binder: kafka
       kafka:
         binder:
-          brokers: 127.0.0.1:9092
-          zkNodes: 127.0.0.1:2181
-event:
-  store:
-    service:
-      name: event-store-service
-choerodon:
-  ldap:
-    userNameType: 0
-  devops:
-    message: true
-  event:
-    consumer:
-      enabled: true # 是否开启，不设置默认开启
-      queue-type: kafka # 消息队列类型,目前仅支持kafka
-      enable-duplicate-remove: true # 是否开启去重功能
-      failed-strategy: nothing # 消息失败策略
-      retry:
-        enabled: true # 是否开启重试功能
-      kafka:
-        bootstrap-servers: localhost:9092
-eureka:
-  instance:
-    preferIpAddress: true
-    leaseRenewalIntervalInSeconds: 10
-    leaseExpirationDurationInSeconds: 30
-    metadata-map:
-      VERSION: v1
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8000/eureka/
-    registryFetchIntervalSeconds: 10
+          brokers: ${SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS:kafka-0:9092}
+          zkNodes: ${SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES:zookeeper-0:2181}
+    bus:
+      enabled: true
+
+feign:
+  hystrix:
+    enabled: true
+
 hystrix:
+  stream:
+    queue:
+      enabled: true
   command:
     default:
       execution:
+        timeout:
+          enabled: true
         isolation:
           thread:
-            timeoutInMilliseconds: 15000
-  stream:
-    queue:
-      enabled: false
-ribbon:
-  ReadTimeout: 5000
-  ConnectTimeout: 5000
-file-service:
-  ribbon:
-    ReadTimeout: 15000
-    ConnectTimeout: 15000
+            timeoutInMilliseconds: ${HYSTRIX_COMMAND_TIMEOUT_IN_MILLISECONDS:90000}
+
 mybatis:
   mapperLocations: classpath*:/mapper/*.xml
-  configuration: # 数据库下划线转驼峰配置
+  configuration:
     mapUnderscoreToCamelCase: true
+
+choerodon:
+  swagger:
+    client: client
+    oauth-url: http://dev.hzero.org:8180/oauth/oauth/authorize
+    skip:
+      service: register-server, api-gateway, gateway-helper, oauth-server
+  gateway:
+    domain: ${CHOERODON_GATEWAY_DOMAIN:dev.hzero.org:8180}
+    names: api-gateway, gateway-helper
+  register:
+    executetTime: 100
+  profiles:
+    active: sit
+
+logging:
+  level:
+    org.apache.ibatis: ${LOGGING_LVELE:debug}
+    org.hzero: ${LOGGING_LVELE:debug}
+    org.springframework.web: ${LOGGING_LVELE:debug}
 
