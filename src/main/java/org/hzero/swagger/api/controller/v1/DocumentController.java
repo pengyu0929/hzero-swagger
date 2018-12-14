@@ -14,7 +14,10 @@ import org.springframework.remoting.RemoteAccessException;
 import org.springframework.web.bind.annotation.*;
 
 import io.choerodon.swagger.annotation.Permission;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 获取swagger信息controller
@@ -36,6 +39,7 @@ public class DocumentController {
      * @return String
      */
     @Permission(permissionPublic = true)
+    @ApiIgnore
     @ApiOperation("获取服务id对应的版本swagger json字符串")
     @GetMapping(value = "/{servicePrefix}")
     public ResponseEntity<String> get(@PathVariable("servicePrefix") String name,
@@ -64,6 +68,10 @@ public class DocumentController {
      * @return null
      */
     @ApiOperation("手动刷新表中swagger")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "serviceName", value = "服务名称", paramType = "path"),
+        @ApiImplicitParam(name = "version", value = "标记版本", paramType = "query"),
+    })
     @PostMapping(value = "/swagger/refresh/{serviceName}")
     public ResponseEntity refresh(@PathVariable("serviceName") String serviceName,
                                   @RequestParam(value = "version", required = false, defaultValue = Versions.NULL_VERSION) String version) {
