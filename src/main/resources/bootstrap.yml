@@ -9,10 +9,6 @@ security:
     enabled: false
   ignored: /swagger-ui.html,/swagger-resources/**, /webjars/** , /docs/**
 
-spring:
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
-
 eureka:
   instance:
     preferIpAddress: ${EUREKA_INSTANCE_PREFER_IP_ADDRESS:true}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="org.hzero.swagger.infra.mapper.ServiceRouteMapper">
+
+    <select id="selectRoutes" resultType="org.hzero.swagger.domain.entity.ServiceRoute">
+      SELECT
+        hsr.service_id,
+        hsr.name,
+        hsr.path,
+        hsr.url,
+        hsr.strip_prefix,
+        hsr.retryable,
+        hsr.sensitive_headers,
+        hsr.helper_service,
+        hs.service_code
+      FROM hsgp_service_route hsr
+      JOIN hsgp_service hs ON hs.service_id = hsr.service_id
+      WHERE hsr.product_id = 0 AND hsr.product_env_id = 0
+      <if test="name != null and name != ''">
+          <bind name="nameLike" value="'%' + name +'%'"/>
+          AND hsr.name LIKE #{nameLike}
+      </if>
+      <if test="path != null and path != ''">
+          <bind name="pathLike" value="'%' + path +'%'"/>
+          AND hsr.path LIKE #{pathLike}
+      </if>
+      GROUP BY hsr.name, hsr.path, hs.service_code
+    </select>
+
+</mapper>
