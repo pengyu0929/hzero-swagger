@@ -77,7 +77,7 @@ public class DocumentController {
                                   @RequestParam(value = "version", required = false, defaultValue = Versions.NULL_VERSION) String version) {
         try {
             documentService.manualRefresh(serviceName, version);
-            return Results.success();
+            return Results.success("refresh success.");
         } catch (RemoteAccessException e) {
             LOGGER.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

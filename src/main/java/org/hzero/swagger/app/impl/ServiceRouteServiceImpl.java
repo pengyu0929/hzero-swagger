@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 /**
  *
@@ -55,6 +57,28 @@ public class ServiceRouteServiceImpl implements ServiceRouteService {
                 }
             }
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceRoute create(ServiceRoute route) {
+        setRouteService(route);
+        ServiceRoute query = new ServiceRoute();
+        query.setServiceCode(route.getServiceCode());
+        query.setName(route.getName());
+        query.setPath(route.getPath());
+        int count = serviceRouteRepository.selectCount(query);
+        Assert.isTrue(count == 0, String.format("route[serviceCode=%s,name=%s,path=%s] has exists.",
+                route.getServiceCode(), route.getName(), route.getPath()));
+        serviceRouteRepository.insertSelective(route);
+        return route;
+    }
+
+    @Override
+    public ServiceRoute update(ServiceRoute route) {
+        setRouteService(route);
+        serviceRouteRepository.updateByPrimaryKey(route);
+        return null;
     }
 
     private void executeRefreshRoute(final ChoerodonRouteData data) {

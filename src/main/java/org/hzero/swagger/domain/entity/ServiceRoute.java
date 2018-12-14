@@ -60,7 +60,6 @@ public class ServiceRoute extends AuditDomain {
     @ApiModelProperty(value = "配置经过的gateway helper服务名")
     private String helperService;
     @Transient
-    @NotEmpty
     private String serviceName;
 
     public void defaultProduct() {
