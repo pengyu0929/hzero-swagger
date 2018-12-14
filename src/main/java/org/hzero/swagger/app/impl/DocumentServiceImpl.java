@@ -151,6 +151,7 @@ public class DocumentServiceImpl implements DocumentService {
         registerInstancePayload.setAppName(serviceName);
         registerInstancePayload.setVersion(version);
         swaggerService.updateOrInsertSwagger(registerInstancePayload, json);
+        routeService.refreshRoute(serviceName, json);
     }
 
     private String fetch(ServiceInstance instance) {

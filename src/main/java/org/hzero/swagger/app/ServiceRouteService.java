@@ -7,7 +7,7 @@ import org.hzero.swagger.domain.entity.ServiceRoute;
  */
 public interface ServiceRouteService {
 
-    void refreshRoute(String swaggerJson);
+    void refreshRoute(String serviceName, String swaggerJson);
 
     ServiceRoute create(ServiceRoute route);
 

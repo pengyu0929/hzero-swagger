@@ -35,9 +35,8 @@ public class SwaggerServiceImpl implements SwaggerService {
         List<SwaggerResource> resources = new LinkedList<>();
         MultiKeyMap multiKeyMap = serviceRouteRepository.getAllRunningInstances();
         Set set = multiKeyMap.keySet();
-        Iterator iterator = set.iterator();
-        while (iterator.hasNext()) {
-            MultiKey multiKey = (MultiKey) iterator.next();
+        for (Object key : set) {
+            MultiKey multiKey = (MultiKey) key;
             ServiceRoute route = (ServiceRoute) multiKeyMap.get(multiKey);
             if (route.getServiceCode() != null) {
                 boolean isSkipService = Arrays.stream(swaggerProperties.getSkipService()).anyMatch(t -> t.equals(route.getServiceCode()));

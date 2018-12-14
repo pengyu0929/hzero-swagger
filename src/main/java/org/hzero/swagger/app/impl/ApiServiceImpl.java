@@ -89,9 +89,9 @@ public class ApiServiceImpl implements ApiService {
                         }
                     });
                 }
-                path.setRemark(Optional.ofNullable(jsonNode.get("summary")).map(n -> n.asText()).orElse(null));
-                path.setDescription(Optional.ofNullable(jsonNode.get(DESCRIPTION)).map(n -> n.asText()).orElse(null));
-                path.setOperationId(Optional.ofNullable(jsonNode.get("operationId")).map(n -> n.asText()).orElse(null));
+                path.setRemark(Optional.ofNullable(jsonNode.get("summary")).map(JsonNode::asText).orElse(null));
+                path.setDescription(Optional.ofNullable(jsonNode.get(DESCRIPTION)).map(JsonNode::asText).orElse(null));
+                path.setOperationId(Optional.ofNullable(jsonNode.get("operationId")).map(JsonNode::asText).orElse(null));
                 path.setOperationId(jsonNode.get("operationId").asText());
                 processConsumes(path, jsonNode);
                 processProduces(path, jsonNode);
@@ -161,9 +161,7 @@ public class ApiServiceImpl implements ApiService {
     private List<ControllerDTO> processControllers(JsonNode node) {
         List<ControllerDTO> controllers = new ArrayList<>();
         JsonNode tagNodes = node.get("tags");
-        Iterator<JsonNode> iterator = tagNodes.iterator();
-        while (iterator.hasNext()) {
-            JsonNode jsonNode = iterator.next();
+        for (JsonNode jsonNode : tagNodes) {
             String name = jsonNode.findValue("name").asText();
             String description = jsonNode.findValue(DESCRIPTION).asText();
             ControllerDTO controller = new ControllerDTO();

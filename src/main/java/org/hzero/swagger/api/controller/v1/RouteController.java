@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 路由Controller
  *
  * @author bojiangzhou 2018/12/14
  */
+@ApiIgnore
 @RestController
 @RequestMapping(value = "/v1/routes")
 public class RouteController extends BaseController {
@@ -35,6 +37,7 @@ public class RouteController extends BaseController {
     @Permission(level = ResourceLevel.SITE)
     @ApiOperation("增加一个新路由，必传：serviceCode/name/path")
     @PostMapping
+    @ApiIgnore
     public ResponseEntity<ServiceRoute> create(@RequestBody ServiceRoute route) {
         validObject(route);
         return Results.success(serviceRouteService.create(route));

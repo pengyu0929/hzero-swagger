@@ -114,7 +114,7 @@ public class EurekaInstanceRegisteredListener {
             }
         } else {
             swaggerConsumer(instancePayload, json);
-            routeConsumer(json);
+            routeConsumer(instancePayload.getAppName(), json);
             FAIL_TIME_MAP.remove(instancePayload.getInstanceAddress());
         }
     }
@@ -127,9 +127,9 @@ public class EurekaInstanceRegisteredListener {
         }
     }
 
-    private void routeConsumer(final String json) {
+    private void routeConsumer(final String serviceName, final String json) {
         try {
-            routeService.refreshRoute(json);
+            routeService.refreshRoute(serviceName, json);
         } catch (Exception e) {
             LOGGER.warn("message has bean consumed failed when refreshRoute, e {}", e.getMessage());
         }

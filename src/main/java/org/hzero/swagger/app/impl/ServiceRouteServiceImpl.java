@@ -6,6 +6,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.choerodon.core.swagger.ChoerodonRouteData;
 import io.choerodon.swagger.swagger.extra.ExtraData;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.core.base.BaseConstants;
 import org.hzero.swagger.app.ServiceRouteService;
 import org.hzero.swagger.domain.entity.HService;
@@ -36,7 +37,26 @@ public class ServiceRouteServiceImpl implements ServiceRouteService {
     private HServiceRepository serviceRepository;
 
     @Override
-    public void refreshRoute(String swaggerJson) {
+    public void refreshRoute(String serviceName, String swaggerJson) {
+        ChoerodonRouteData data = extractRouteData(swaggerJson);
+        if (data == null) {
+            LOGGER.warn("refresh route error. cant't parse route data.");
+            return;
+        }
+
+        // 服务 ExtraData 返回的是标准的服务名，开发环境中带工号的需自动处理下
+        String serviceId = data.getServiceId();
+        if (!StringUtils.equals(serviceId, serviceName) && serviceName.startsWith(serviceId)) {
+            String suffix = serviceName.replace(serviceId, ""); // 截取后缀
+            data.setServiceId(serviceName);
+            data.setName(data.getName() + suffix);
+            data.setPath(data.getPath().replace("/**", "") + suffix + "/**");
+        }
+
+        executeRefreshRoute(data);
+    }
+
+    private ChoerodonRouteData extractRouteData(String swaggerJson) {
         ExtraData extraData;
         Map swaggerMap = null;
         ChoerodonRouteData data;
@@ -52,11 +72,12 @@ public class ServiceRouteServiceImpl implements ServiceRouteService {
                 if (extraData != null) {
                     data = mapper.convertValue(extraData.getData().get(ExtraData.ZUUL_ROUTE_DATA), ChoerodonRouteData.class);
                     if (data != null) {
-                        executeRefreshRoute(data);
+                        return data;
                     }
                 }
             }
         }
+        return null;
     }
 
     @Override
@@ -105,7 +126,7 @@ public class ServiceRouteServiceImpl implements ServiceRouteService {
     private void setRoute(ChoerodonRouteData routeData, ServiceRoute route) {
         route.setName(routeData.getName());
         route.setPath(routeData.getPath());
-        route.setServiceCode(routeData.getServiceId().toUpperCase());
+        route.setServiceCode(routeData.getServiceId());
         route.setRetryable(routeData.getRetryable() != null && routeData.getRetryable() ? BaseConstants.Flag.YES : BaseConstants.Flag.NO);
         route.setCustomSensitiveHeaders(routeData.getCustomSensitiveHeaders() != null && routeData.getCustomSensitiveHeaders() ? BaseConstants.Flag.YES : BaseConstants.Flag.NO);
         route.setHelperService(routeData.getHelperService());
@@ -122,6 +143,7 @@ public class ServiceRouteServiceImpl implements ServiceRouteService {
         queryService = serviceRepository.selectOne(queryService);
         if (queryService != null) {
             route.setServiceId(queryService.getServiceId());
+            route.setServiceCode(route.getServiceCode());
         } else {
             HService insert = new HService();
             insert.setServiceCode(route.getServiceCode());
@@ -129,6 +151,7 @@ public class ServiceRouteServiceImpl implements ServiceRouteService {
             insert.setAppSourceId(Governance.DEFAULT_ID);
             serviceRepository.insertSelective(insert);
             route.setServiceId(insert.getServiceId());
+            route.setServiceCode(route.getServiceCode());
         }
     }
 

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.map.MultiKeyMap;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.mybatis.base.impl.BaseRepositoryImpl;
 import org.hzero.swagger.domain.entity.ServiceRoute;
 import org.hzero.swagger.domain.repository.ServiceRouteRepository;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 /**
  * ServiceRoute Repository
