@@ -29,7 +29,6 @@ docker-build:
   only:
     - master
     - tags
-    - develop
     - /^hotfix-.*$/
     - /^release-.*$/
 
