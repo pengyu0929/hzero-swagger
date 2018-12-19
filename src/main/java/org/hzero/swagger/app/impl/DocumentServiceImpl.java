@@ -146,6 +146,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public void manualRefresh(String serviceName, String version) {
+        serviceName = StringUtils.lowerCase(serviceName);
         String json = fetchSwaggerJsonByService(serviceName, version);
         RegisterInstancePayload registerInstancePayload = new RegisterInstancePayload();
         registerInstancePayload.setAppName(serviceName);

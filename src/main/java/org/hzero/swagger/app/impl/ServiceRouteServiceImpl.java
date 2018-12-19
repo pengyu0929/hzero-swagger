@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.choerodon.core.exception.CommonException;
 import io.choerodon.core.swagger.ChoerodonRouteData;
 import io.choerodon.swagger.swagger.extra.ExtraData;
 import org.apache.commons.lang3.StringUtils;
@@ -14,12 +15,11 @@ import org.hzero.swagger.domain.entity.ServiceRoute;
 import org.hzero.swagger.domain.repository.HServiceRepository;
 import org.hzero.swagger.domain.repository.ServiceRouteRepository;
 import org.hzero.swagger.infra.constant.Governance;
+import org.hzero.swagger.infra.util.RefreshUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 /**
  *
@@ -35,13 +35,14 @@ public class ServiceRouteServiceImpl implements ServiceRouteService {
     private ServiceRouteRepository serviceRouteRepository;
     @Autowired
     private HServiceRepository serviceRepository;
+    @Autowired
+    private RefreshUtil refreshUtil;
 
     @Override
     public void refreshRoute(String serviceName, String swaggerJson) {
         ChoerodonRouteData data = extractRouteData(swaggerJson);
         if (data == null) {
-            LOGGER.warn("refresh route error. cant't parse route data.");
-            return;
+            throw new CommonException("refresh route error, cant't parse route data. check if config ExtraDataManager.");
         }
 
         // 服务 ExtraData 返回的是标准的服务名，开发环境中带工号的需自动处理下
@@ -80,28 +81,6 @@ public class ServiceRouteServiceImpl implements ServiceRouteService {
         return null;
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public ServiceRoute create(ServiceRoute route) {
-        setRouteService(route);
-        ServiceRoute query = new ServiceRoute();
-        query.setServiceCode(route.getServiceCode());
-        query.setName(route.getName());
-        query.setPath(route.getPath());
-        int count = serviceRouteRepository.selectCount(query);
-        Assert.isTrue(count == 0, String.format("route[serviceCode=%s,name=%s,path=%s] has exists.",
-                route.getServiceCode(), route.getName(), route.getPath()));
-        serviceRouteRepository.insertSelective(route);
-        return route;
-    }
-
-    @Override
-    public ServiceRoute update(ServiceRoute route) {
-        setRouteService(route);
-        serviceRouteRepository.updateByPrimaryKey(route);
-        return null;
-    }
-
     private void executeRefreshRoute(final ChoerodonRouteData data) {
         ServiceRoute route = new ServiceRoute();
         setRoute(data, route);
@@ -121,6 +100,7 @@ public class ServiceRouteServiceImpl implements ServiceRouteService {
             serviceRouteRepository.updateByPrimaryKey(route);
             LOGGER.info("{} : rout update success", route.getName());
         }
+        refreshUtil.refresh();
     }
 
     private void setRoute(ChoerodonRouteData routeData, ServiceRoute route) {

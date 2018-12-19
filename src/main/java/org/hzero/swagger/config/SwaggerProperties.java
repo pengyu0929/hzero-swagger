@@ -23,6 +23,10 @@ public class SwaggerProperties {
      */
     private String gatewayDomain = "localhost";
     /**
+     * 网关名称
+     */
+    private String[] gatewayNames = new String[]{"api-gateway", "gateway-helper"};
+    /**
      * 跳过的服务
      */
     private String[] skipService = new String[]{};
@@ -61,6 +65,14 @@ public class SwaggerProperties {
 
     public void setGatewayDomain(String gatewayDomain) {
         this.gatewayDomain = gatewayDomain;
+    }
+
+    public String[] getGatewayNames() {
+        return gatewayNames;
+    }
+
+    public void setGatewayNames(String[] gatewayNames) {
+        this.gatewayNames = gatewayNames;
     }
 
     public String[] getSkipService() {

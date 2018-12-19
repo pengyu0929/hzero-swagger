@@ -9,7 +9,4 @@ public interface ServiceRouteService {
 
     void refreshRoute(String serviceName, String swaggerJson);
 
-    ServiceRoute create(ServiceRoute route);
-
-    ServiceRoute update(ServiceRoute route);
 }

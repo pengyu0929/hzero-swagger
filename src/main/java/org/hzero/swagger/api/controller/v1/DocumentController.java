@@ -2,6 +2,10 @@ package org.hzero.swagger.api.controller.v1;
 
 import java.io.IOException;
 
+import io.choerodon.swagger.annotation.Permission;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.hzero.core.util.Results;
 import org.hzero.swagger.app.DocumentService;
 import org.hzero.swagger.infra.constant.Versions;
@@ -10,13 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.remoting.RemoteAccessException;
 import org.springframework.web.bind.annotation.*;
-
-import io.choerodon.swagger.annotation.Permission;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -75,12 +73,7 @@ public class DocumentController {
     @PostMapping(value = "/swagger/refresh/{serviceName}")
     public ResponseEntity refresh(@PathVariable("serviceName") String serviceName,
                                   @RequestParam(value = "version", required = false, defaultValue = Versions.NULL_VERSION) String version) {
-        try {
-            documentService.manualRefresh(serviceName, version);
-            return Results.success("refresh success.");
-        } catch (RemoteAccessException e) {
-            LOGGER.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        documentService.manualRefresh(serviceName, version);
+        return Results.success("refresh success.");
     }
 }
