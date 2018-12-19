@@ -11,18 +11,16 @@
     </parent>
     <artifactId>hzero-swagger</artifactId>
 
-    <properties>
-        <choerodon.starters.version>0.6.0.RELEASE</choerodon.starters.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.hzero.starter</groupId>
             <artifactId>hzero-starter-core</artifactId>
+            <version>${hzero.starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hzero.starter</groupId>
             <artifactId>hzero-starter-mybatis-mapper</artifactId>
+            <version>${hzero.starter.version}</version>
         </dependency>
 
         <dependency>
@@ -47,17 +45,17 @@
         <dependency>
             <groupId>io.choerodon</groupId>
             <artifactId>choerodon-starter-oauth-resource</artifactId>
-            <version>${choerodon.starters.version}</version>
+            <version>${choerodon.starter.version}</version>
         </dependency>
         <dependency>
             <groupId>io.choerodon</groupId>
             <artifactId>choerodon-starter-swagger</artifactId>
-            <version>${choerodon.starters.version}</version>
+            <version>${choerodon.starter.version}</version>
         </dependency>
         <dependency>
             <groupId>io.choerodon</groupId>
             <artifactId>choerodon-starter-core</artifactId>
-            <version>${choerodon.starters.version}</version>
+            <version>${choerodon.starter.version}</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -124,7 +122,7 @@
         <dependency>
             <groupId>io.choerodon</groupId>
             <artifactId>choerodon-starter-bus</artifactId>
-            <version>${choerodon.starters.version}</version>
+            <version>${choerodon.starter.version}</version>
         </dependency>
 
     </dependencies>
