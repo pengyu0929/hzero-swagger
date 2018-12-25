@@ -59,7 +59,7 @@ hzero:
 logging:
   level:
     org.hzero.swagger.infra.feign.ConfigServerClient: debug
-    org.apache.ibatis: ${LOGGING_LVELE:debug}
-    org.hzero: ${LOGGING_LVELE:debug}
-    org.springframework.web: ${LOGGING_LVELE:debug}
+    org.apache.ibatis: ${LOGGING_LVELE:info}
+    org.hzero: ${LOGGING_LVELE:info}
+    org.springframework.web: ${LOGGING_LVELE:info}
 
