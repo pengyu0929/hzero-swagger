@@ -51,7 +51,7 @@ hzero:
   swagger:
     client: ${HZERO_SWAGGER_CLIENT:client}
     oauth-url: ${HZERO_OAUTH_URL:http://dev.hzero.org:8180/oauth/oauth/authorize}
-    skip-service: ${HZERO_SWAGGER_SKIP_SERVICE:register-server, api-gateway, gateway-helper}
+    skip-service: ${HZERO_SWAGGER_SKIP_SERVICE:register-server, api-gateway, gateway-helper, oauth-server}
     gateway-domain: ${HZERO_GATEWAY_DOMAIN:dev.hzero.org:8180}
     fetch-time: ${HZERO_SWAGGER_FETCH_TIME:20}
     fetch-seconds: ${HZERO_SWAGGER_FETCH_SECONDS:30}
