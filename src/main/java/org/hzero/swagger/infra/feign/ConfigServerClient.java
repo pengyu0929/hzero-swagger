@@ -1,11 +1,9 @@
 package org.hzero.swagger.infra.feign;
 
-import java.util.Map;
-
+import org.hzero.swagger.config.FeignLogConfiguration;
 import org.hzero.swagger.infra.feign.fallback.ConfigServerClientFallback;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -14,11 +12,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *
  * @author wuguokai
  */
-@FeignClient(value = "config-server", fallback = ConfigServerClientFallback.class)
+@FeignClient(value = "config-server",
+    fallback = ConfigServerClientFallback.class,
+    configuration = FeignLogConfiguration.class
+)
 public interface ConfigServerClient {
 
-    @RequestMapping(value = "/monitor", method = RequestMethod.POST)
-    ResponseEntity<String> refresh(@RequestBody Map<String, ?> queryMap);
+    @RequestMapping(value = "/monitor/refresh-route", method = RequestMethod.POST)
+    ResponseEntity<String> refreshRoute();
 
 }
 

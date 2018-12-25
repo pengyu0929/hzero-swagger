@@ -74,6 +74,6 @@ public class DocumentController {
     public ResponseEntity refresh(@PathVariable("serviceName") String serviceName,
                                   @RequestParam(value = "version", required = false, defaultValue = Versions.NULL_VERSION) String version) {
         documentService.manualRefresh(serviceName, version);
-        return Results.success("refresh success.");
+        return Results.success("refreshRoute success.");
     }
 }

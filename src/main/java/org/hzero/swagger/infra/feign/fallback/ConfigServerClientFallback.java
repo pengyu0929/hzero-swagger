@@ -1,7 +1,5 @@
 package org.hzero.swagger.infra.feign.fallback;
 
-import java.util.Map;
-
 import org.hzero.swagger.infra.feign.ConfigServerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +18,8 @@ public class ConfigServerClientFallback implements ConfigServerClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigServerClientFallback.class);
 
     @Override
-    public ResponseEntity<String> refresh(Map<String, ?> queryMap) {
-        LOGGER.error("refresh config failed! map: {}", queryMap);
-        return new ResponseEntity<>("refresh config failed!", HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<String> refreshRoute() {
+        LOGGER.error("refreshRoute config failed!");
+        return new ResponseEntity<>("refreshRoute config failed!", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

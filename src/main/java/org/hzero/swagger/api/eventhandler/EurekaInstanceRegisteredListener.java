@@ -131,7 +131,7 @@ public class EurekaInstanceRegisteredListener {
         try {
             routeService.refreshRoute(serviceName, json);
         } catch (Exception e) {
-            LOGGER.warn("message has bean consumed failed when refreshRoute, e {}", e.getMessage());
+            LOGGER.warn("message has bean consumed failed when refreshRoute, serviceName={}, error={}", serviceName, e.getMessage());
         }
     }
 }

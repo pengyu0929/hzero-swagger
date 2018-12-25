@@ -42,7 +42,7 @@ public class ServiceRouteServiceImpl implements ServiceRouteService {
     public void refreshRoute(String serviceName, String swaggerJson) {
         ChoerodonRouteData data = extractRouteData(swaggerJson);
         if (data == null) {
-            throw new CommonException("refresh route error, cant't parse route data. check if config ExtraDataManager.");
+            throw new CommonException("refreshRoute route error, cant't parse route data. check if config ExtraDataManager.");
         }
 
         // 服务 ExtraData 返回的是标准的服务名，开发环境中带工号的需自动处理下
@@ -98,9 +98,9 @@ public class ServiceRouteServiceImpl implements ServiceRouteService {
             route.setObjectVersionNumber(self.getObjectVersionNumber());
             route.setServiceRouteId(self.getServiceRouteId());
             serviceRouteRepository.updateByPrimaryKey(route);
-            LOGGER.info("{} : rout update success", route.getName());
+            LOGGER.info("{} : route update success", route.getName());
         }
-        refreshUtil.refresh();
+        refreshUtil.refreshRoute();
     }
 
     private void setRoute(ChoerodonRouteData routeData, ServiceRoute route) {
