@@ -119,11 +119,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>io.choerodon</groupId>
-            <artifactId>choerodon-starter-bus</artifactId>
-            <version>${choerodon.starter.version}</version>
-        </dependency>
 
     </dependencies>
 
