@@ -25,7 +25,6 @@
           <bind name="pathLike" value="'%' + path +'%'"/>
           AND hsr.path LIKE #{pathLike}
       </if>
-      GROUP BY hsr.name, hsr.path, hs.service_code
     </select>
 
 </mapper>
