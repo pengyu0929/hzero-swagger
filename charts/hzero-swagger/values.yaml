@@ -9,16 +9,17 @@ image:
   pullPolicy: Always
 
 preJob:
+  image: registry.cn-hangzhou.aliyuncs.com/choerodon-tools/dbtool:0.5.6
+  timeout: 1200
   preInitDB:
-    mysql:
-      host: 192.168.11.167
-      port: 3306
-      database: hzero_governance
+    enable: true
+    datasource:
+      url: jdbc:mysql://192.168.11.167:3306/hzero_governance?useUnicode=true&characterEncoding=utf-8&useSSL=false
       username: root
       password: Root@1234!
 
 deployment:
-  managementPort: 8964
+  managementPort: 8051
 
 env:
   open:
@@ -47,7 +48,7 @@ persistence:
 service:
   enabled: false
   type: ClusterIP
-  port: 8963
+  port: 8050
   name: hzero-swagger
   
 ingress:

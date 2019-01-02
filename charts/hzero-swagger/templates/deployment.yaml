@@ -15,6 +15,12 @@ spec:
       labels:
 {{ include "service.labels.standard" . | indent 8 }}
 {{ include "service.microservice.labels" . | indent 8 }}
+        NODE_GROUP_ID: {{ .Values.hzero.HZERO_NODE_GROUP_ID | quote }}
+        PRODUCT_CODE: {{ .Values.hzero.HZERO_PRODUCT_CODE | quote }}
+        PRODUCT_VERSION_CODE: {{ .Values.hzero.HZERO_PRODUCT_VERSION_CODE | quote }}
+        PRODUCT_ENV_CODE: {{ .Values.hzero.HZERO_PRODUCT_ENV_CODE | quote }}
+        SERVICE_CODE: {{ .Chart.Name | quote }}
+        SERVICE_VERSION_CODE: {{ .Values.hzero.HZERO_SERVICE_VERSION_CODE | quote }}
       annotations:
 {{ include "service.monitoring.pod.annotations" . | indent 8 }}
     spec:
@@ -33,11 +39,16 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          # readinessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: {{ .Values.deployment.managementPort }}
+          #     scheme: HTTP
           readinessProbe:
-            httpGet:
-              path: /health
-              port: {{ .Values.deployment.managementPort }}
-              scheme: HTTP
+            exec:
+              command:
+              - curl
+              - localhost:{{ .Values.deployment.managementPort }}/health
             failureThreshold: 3
             initialDelaySeconds: 60
             periodSeconds: 10

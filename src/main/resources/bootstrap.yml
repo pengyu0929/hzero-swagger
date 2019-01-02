@@ -1,7 +1,7 @@
 server:
-  port: 8963
+  port: 8050
 management:
-  port: 8964
+  port: 8051
   security:
     enabled: false
 security:
