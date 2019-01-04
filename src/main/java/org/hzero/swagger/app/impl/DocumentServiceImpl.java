@@ -7,7 +7,6 @@ import org.apache.commons.collections.map.MultiKeyMap;
 import org.apache.commons.lang.StringUtils;
 import org.hzero.swagger.api.dto.RegisterInstancePayload;
 import org.hzero.swagger.app.DocumentService;
-import org.hzero.swagger.app.ServiceRouteService;
 import org.hzero.swagger.app.SwaggerService;
 import org.hzero.swagger.config.SwaggerProperties;
 import org.hzero.swagger.domain.entity.ServiceRoute;
@@ -59,8 +58,6 @@ public class DocumentServiceImpl implements DocumentService {
     private DiscoveryClient discoveryClient;
     @Autowired
     private ServiceRouteRepository serviceRouteRepository;
-    @Autowired
-    private ServiceRouteService routeService;
 
     @Override
     public String getSwaggerJson(String name, String version) throws IOException {
@@ -153,7 +150,6 @@ public class DocumentServiceImpl implements DocumentService {
         payload.setAppName(serviceName);
         payload.setVersion(version);
         swaggerService.updateOrInsertSwagger(payload, json);
-        routeService.refreshRoute(serviceName, json);
     }
 
     private String fetch(ServiceInstance instance) {
