@@ -5,25 +5,6 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://db.hzero.org:3306/hzero_governance?useUnicode=true&characterEncoding=utf-8&useSSL=false}
     username: ${SPRING_DATASOURCE_USERNAME:hzero}
     password: ${SPRING_DATASOURCE_PASSWORD:hzero}
-  kafka:
-    bootstrap-servers: ${CHOERODON_EVENT_CONSUMER_KAFKA_BOOTSTRAP_SERVERS:kafka-0:9092}
-    producer:
-      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
-    consumer:
-      group-id: hzero-swagger
-      auto-offset-reset: latest
-    listener:
-      ack-mode: manual_immediate
-      poll-timeout: 3000
-  cloud:
-    stream:
-      default-binder: kafka
-      kafka:
-        binder:
-          brokers: ${SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS:kafka-0:9092}
-          zkNodes: ${SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES:zookeeper-0:2181}
-    bus:
-      enabled: true
 
 feign:
   hystrix:
@@ -46,6 +27,13 @@ mybatis:
   mapperLocations: classpath*:/mapper/*.xml
   configuration:
     mapUnderscoreToCamelCase: true
+
+choerodon:
+  eureka:
+    event:
+      retry-time: 30
+      retry-interval: 10
+      skip-services: zipkin**, **gateway**, **register**, **oauth**
 
 hzero:
   swagger:

@@ -3,18 +3,19 @@ package org.hzero.swagger.app.impl;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import io.choerodon.core.exception.CommonException;
 import org.apache.commons.collections.keyvalue.MultiKey;
 import org.apache.commons.collections.map.MultiKeyMap;
-import org.hzero.swagger.api.dto.RegisterInstancePayload;
 import org.hzero.swagger.app.SwaggerService;
 import org.hzero.swagger.config.SwaggerProperties;
+import org.hzero.swagger.domain.entity.ServiceRoute;
 import org.hzero.swagger.domain.entity.Swagger;
 import org.hzero.swagger.domain.repository.ServiceRouteRepository;
 import org.hzero.swagger.domain.repository.SwaggerRepository;
-import org.hzero.swagger.domain.entity.ServiceRoute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import io.choerodon.core.exception.CommonException;
+import io.choerodon.eureka.event.EurekaEventPayload;
 import springfox.documentation.swagger.web.ApiKeyVehicle;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SwaggerResource;
@@ -67,10 +68,10 @@ public class SwaggerServiceImpl implements SwaggerService {
     }
 
     @Override
-    public void updateOrInsertSwagger(RegisterInstancePayload registerInstancePayload, String json) {
+    public void updateOrInsertSwagger(EurekaEventPayload payload, String json) {
         Swagger param = new Swagger();
-        param.setServiceVersion(registerInstancePayload.getVersion());
-        param.setServiceName(registerInstancePayload.getAppName());
+        param.setServiceVersion(payload.getVersion());
+        param.setServiceName(payload.getAppName());
         Swagger swagger = swaggerRepository.selectOne(param);
         if (swagger != null) {
             swagger.setValue(json);
@@ -79,8 +80,8 @@ public class SwaggerServiceImpl implements SwaggerService {
             }
         } else {
             Swagger inert = new Swagger();
-            inert.setServiceName(registerInstancePayload.getAppName());
-            inert.setServiceVersion(registerInstancePayload.getVersion());
+            inert.setServiceName(payload.getAppName());
+            inert.setServiceVersion(payload.getVersion());
             inert.setValue(json);
 
             if (swaggerRepository.insert(inert) != 1) {

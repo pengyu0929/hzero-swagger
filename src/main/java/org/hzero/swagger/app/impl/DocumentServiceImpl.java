@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import io.choerodon.eureka.event.EurekaEventPayload;
 import io.swagger.models.auth.OAuth2Definition;
 
 /**
@@ -148,10 +149,10 @@ public class DocumentServiceImpl implements DocumentService {
     public void manualRefresh(String serviceName, String version) {
         serviceName = StringUtils.lowerCase(serviceName);
         String json = fetchSwaggerJsonByService(serviceName, version);
-        RegisterInstancePayload registerInstancePayload = new RegisterInstancePayload();
-        registerInstancePayload.setAppName(serviceName);
-        registerInstancePayload.setVersion(version);
-        swaggerService.updateOrInsertSwagger(registerInstancePayload, json);
+        EurekaEventPayload payload = new EurekaEventPayload();
+        payload.setAppName(serviceName);
+        payload.setVersion(version);
+        swaggerService.updateOrInsertSwagger(payload, json);
         routeService.refreshRoute(serviceName, json);
     }
 
