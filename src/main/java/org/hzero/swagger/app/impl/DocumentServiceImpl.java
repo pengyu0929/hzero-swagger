@@ -3,6 +3,11 @@ package org.hzero.swagger.app.impl;
 import java.io.IOException;
 import java.util.*;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.choerodon.eureka.event.EurekaEventPayload;
+import io.swagger.models.auth.OAuth2Definition;
 import org.apache.commons.collections.map.MultiKeyMap;
 import org.apache.commons.lang.StringUtils;
 import org.hzero.swagger.api.dto.RegisterInstancePayload;
@@ -25,13 +30,6 @@ import org.springframework.remoting.RemoteAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import io.choerodon.eureka.event.EurekaEventPayload;
-import io.swagger.models.auth.OAuth2Definition;
 
 /**
  * 实现类
@@ -146,6 +144,9 @@ public class DocumentServiceImpl implements DocumentService {
     public void manualRefresh(String serviceName, String version) {
         serviceName = StringUtils.lowerCase(serviceName);
         String json = fetchSwaggerJsonByService(serviceName, version);
+        if (StringUtils.isEmpty(json)) {
+            throw new RemoteAccessException("fetch swagger json failed");
+        }
         EurekaEventPayload payload = new EurekaEventPayload();
         payload.setAppName(serviceName);
         payload.setVersion(version);
