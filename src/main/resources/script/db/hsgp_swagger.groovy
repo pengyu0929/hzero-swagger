@@ -23,10 +23,8 @@ databaseChangeLog(logicalFilePath: 'script/db/hsgp_swagger.groovy') {
             column(name: "last_update_date", type: "datetime",   defaultValueComputed:"CURRENT_TIMESTAMP",   remarks: "")   
 
         }
-   createIndex(tableName: "hsgp_swagger", indexName: "hsgp_swagger_u1") {
-            column(name: "service_name")
-            column(name: "service_version")
-        }
+
+        addUniqueConstraint(columnNames:"service_name,service_version",tableName:"hsgp_swagger",constraintName: "hsgp_swagger_u1")
 
     }
 }
