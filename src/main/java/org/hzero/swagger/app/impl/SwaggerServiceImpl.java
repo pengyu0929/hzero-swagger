@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections.keyvalue.MultiKey;
 import org.apache.commons.collections.map.MultiKeyMap;
+import org.apache.commons.lang3.StringUtils;
 import org.hzero.swagger.app.SwaggerService;
 import org.hzero.swagger.config.SwaggerProperties;
 import org.hzero.swagger.domain.entity.ServiceRoute;
@@ -72,6 +73,9 @@ public class SwaggerServiceImpl implements SwaggerService {
         Swagger param = new Swagger();
         param.setServiceVersion(payload.getVersion());
         param.setServiceName(payload.getAppName());
+        if (StringUtils.isBlank(json)) {
+            throw new CommonException("无法获取Swagger文档信息，请确认能访问到您的服务！");
+        }
         Swagger swagger = swaggerRepository.selectOne(param);
         if (swagger != null) {
             swagger.setValue(json);
