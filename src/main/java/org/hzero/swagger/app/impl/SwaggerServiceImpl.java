@@ -3,9 +3,9 @@ package org.hzero.swagger.app.impl;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import io.choerodon.eureka.event.EurekaEventPayload;
 import org.apache.commons.collections.keyvalue.MultiKey;
 import org.apache.commons.collections.map.MultiKeyMap;
-import org.apache.commons.lang3.StringUtils;
 import org.hzero.swagger.app.SwaggerService;
 import org.hzero.swagger.config.SwaggerProperties;
 import org.hzero.swagger.domain.entity.ServiceRoute;
@@ -14,9 +14,6 @@ import org.hzero.swagger.domain.repository.ServiceRouteRepository;
 import org.hzero.swagger.domain.repository.SwaggerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import io.choerodon.core.exception.CommonException;
-import io.choerodon.eureka.event.EurekaEventPayload;
 import springfox.documentation.swagger.web.ApiKeyVehicle;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SwaggerResource;
@@ -73,26 +70,18 @@ public class SwaggerServiceImpl implements SwaggerService {
         Swagger param = new Swagger();
         param.setServiceVersion(payload.getVersion());
         param.setServiceName(payload.getAppName());
-        if (StringUtils.isBlank(json)) {
-            throw new CommonException("无法获取Swagger文档信息，请确认能访问到您的服务！");
-        }
-        Swagger swagger = swaggerRepository.selectOne(param);
+        Swagger swagger = swaggerRepository.selectId(param);
         if (swagger != null) {
-            swagger.setValue(json);
-            if (swaggerRepository.updateByPrimaryKey(swagger) != 1) {
-                throw new CommonException("error.swagger.update");
-            }
-        } else {
-            Swagger inert = new Swagger();
-            inert.setServiceName(payload.getAppName());
-            inert.setServiceVersion(payload.getVersion());
-            inert.setValue(json);
-
-            if (swaggerRepository.insert(inert) != 1) {
-                throw new CommonException("error.swagger.insert");
-            }
+            // 先删除 再添加，更新有时更新不成功
+            swaggerRepository.deleteByPrimaryKey(swagger.getId());
         }
 
+        Swagger inert = new Swagger();
+        inert.setServiceName(payload.getAppName());
+        inert.setServiceVersion(payload.getVersion());
+        inert.setValue(json);
+
+        swaggerRepository.insert(inert);
     }
 
 }

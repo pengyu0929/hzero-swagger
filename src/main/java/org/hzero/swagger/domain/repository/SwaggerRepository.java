@@ -10,4 +10,10 @@ import org.hzero.swagger.domain.entity.Swagger;
  */
 public interface SwaggerRepository extends BaseRepository<Swagger> {
 
+    /**
+     * 查询主键ID
+     * @param param 参数
+     */
+    Swagger selectId(Swagger param);
+
 }
