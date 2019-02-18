@@ -34,6 +34,7 @@ env:
     SPRING_CLOUD_CONFIG_ENABLED: false
     SPRING_CLOUD_CONFIG_URI: http://192.168.12.101:8010/
     LOGGING_LVELE: debug
+    JAVA_OPTS: -Xms1024m -Xmx2048m
 
 metrics:
   path: /prometheus
@@ -59,4 +60,9 @@ resources:
     memory: 2Gi
   requests:
     memory: 1.5Gi
-
+hzero:
+  HZERO_NODE_GROUP_ID: 0
+  HZERO_PRODUCT_CODE: DEFAULT
+  HZERO_PRODUCT_VERSION_CODE: DEFAULT
+  HZERO_PRODUCT_ENV_CODE: DEFAULT
+  HZERO_SERVICE_VERSION_CODE: DEFAULT
