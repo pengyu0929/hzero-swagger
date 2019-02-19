@@ -15,7 +15,7 @@ eureka:
     leaseRenewalIntervalInSeconds: 10
     leaseExpirationDurationInSeconds: 30
     metadata-map:
-      VERSION: 0.6.0
+      VERSION: 0.7.0
       NODE_GROUP_ID: ${HZERO_NODE_GROUP_ID:0}
       PRODUCT_CODE: ${HZERO_PRODUCT_CODE:DEFAULT}
       PRODUCT_VERSION_CODE: ${HZERO_PRODUCT_VERSION_CODE:DEFAULT}
