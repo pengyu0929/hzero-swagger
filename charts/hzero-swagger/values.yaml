@@ -5,14 +5,14 @@
 replicaCount: 1
 
 image:
-  repository: registry.cn-hangzhou.aliyuncs.com/hzero-hzero/hzero-swagger
+  repository: registry.choerodon.com.cn/hzero-hzero/hzero-swagger
   pullPolicy: Always
 
 preJob:
   image: registry.cn-hangzhou.aliyuncs.com/choerodon-tools/dbtool:0.5.6
   timeout: 1200
   preInitDB:
-    enable: true
+    enable: false
     datasource:
       url: jdbc:mysql://192.168.11.167:3306/hzero_governance?useUnicode=true&characterEncoding=utf-8&useSSL=false
       username: root
@@ -61,9 +61,9 @@ ingress:
 
 resources:
   limits:
-    memory: 2Gi
+    memory: 2.2Gi
   requests:
-    memory: 1.5Gi
+    memory: 1.2Gi
 hzero:
   HZERO_NODE_GROUP_ID: 0
   HZERO_PRODUCT_CODE: DEFAULT
