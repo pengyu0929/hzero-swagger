@@ -34,7 +34,9 @@ env:
     SPRING_CLOUD_CONFIG_ENABLED: false
     SPRING_CLOUD_CONFIG_URI: http://192.168.12.101:8010/
     LOGGING_LVELE: debug
-    JAVA_OPTS: -Xms1024m -Xmx2048m
+    JAVA_OPTS: >
+      -Xms1024m
+      -Xmx2048m
 
 metrics:
   path: /prometheus
