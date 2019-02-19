@@ -33,6 +33,8 @@ env:
     SPRING_CLOUD_STREAM_KAFKA_BINDER_ZK_NODES: 192.168.11.167:2181
     SPRING_CLOUD_CONFIG_ENABLED: false
     SPRING_CLOUD_CONFIG_URI: http://192.168.12.101:8010/
+    HZERO_OAUTH_URL: http://hzerodevb.saas.hand-china.com/oauth/oauth/authorize
+    HZERO_GATEWAY_DOMAIN: hzerodevb.saas.hand-china.com
     LOGGING_LVELE: debug
     JAVA_OPTS: >
       -Xms1024m
